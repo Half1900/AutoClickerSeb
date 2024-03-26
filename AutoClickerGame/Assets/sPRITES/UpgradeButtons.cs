@@ -1,7 +1,9 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class UpgradeButtons : MonoBehaviour
@@ -12,7 +14,13 @@ public class UpgradeButtons : MonoBehaviour
     public AutoClicker autoClicker;
     public bool Comprado;
     public Image imagen;
-
+    private Transform tr;
+    private Button boton;
+    private void Awake()
+    {
+        boton = GetComponent<Button>();
+        tr = GetComponent<Transform>();
+    }
     void Start()
     {
         costText.text = "Cost: $" + cost.ToString("F2");
@@ -21,7 +29,7 @@ public class UpgradeButtons : MonoBehaviour
 
     public void PurchaseUpgrade()
     {
-        if (!Comprado)
+        if (Comprado == false)
         {
             if (autoClicker.money >= cost)
             {
@@ -29,6 +37,14 @@ public class UpgradeButtons : MonoBehaviour
                 autoClicker.moneyText.text = "Money: $" + autoClicker.money.ToString("F2");
                 Upgrade();
                 Comprado = true;
+                boton.interactable = false;
+                AudioManager.instance.Play("pop");
+                tr.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.5f).OnComplete(() => { tr.localScale = Vector3.one; });
+                tr.localScale = Vector3.one;
+            }
+            else
+            {
+                AudioManager.instance.Play("error");
             }
         }
         else
@@ -43,8 +59,10 @@ public class UpgradeButtons : MonoBehaviour
         var texto = gameObject.GetComponentInChildren<TextMeshProUGUI>();
         texto.text = "Comprado";
         imagen.color = Color.black;
-        autoClicker.UpgradeMoneyPerClick(upgradeValue);
+        autoClicker.moneyPerClick = upgradeValue;
+        autoClicker.originalMoneyPerClick = upgradeValue;
         cost *= 2f;
         costText.text = "Cost: $" + cost.ToString("F2");
+        
     }
 }
