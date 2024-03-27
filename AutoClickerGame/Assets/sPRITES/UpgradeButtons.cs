@@ -31,6 +31,7 @@ public class UpgradeButtons : MonoBehaviour
         Upgrade upgrade = upgrades[index];
         if (autoClicker.money >= upgrade.cost)
         {
+            AudioManager.instance.Play("Mejora");
             autoClicker.money -= upgrade.cost;
             autoClicker.AddClickPerSecond(upgrade.clickPerSecondBonus);
             autoClicker.AddClickPerTouch(upgrade.clickPerTouchBonus);

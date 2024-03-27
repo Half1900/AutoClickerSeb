@@ -38,7 +38,7 @@ public class AutoClicker : MonoBehaviour
     void Update()
     {
         
-        moneyText.text = "Money: " + money.ToString("C0");
+        moneyText.text = "Ajolotes: " + money.ToString();
 
         // Actualizamos el tiempo de boost y la cuenta regresiva en el mismo texto
         if (countdownTimer > 0)
@@ -58,7 +58,7 @@ public class AutoClicker : MonoBehaviour
                 boostTimer = 0;
                 boostActive = false; // Desactivamos el boost cuando el tiempo restante llega a cero
                 moneyPerClick = originalMoneyPerClick; // Restauramos el valor original de moneyPerClick
-                AudioManager.instance.Stop("Music"); // Detenemos la música cuando el boost termina
+                //AudioManager.instance.Stop("Music"); // Detenemos la música cuando el boost termina
             }
         }
 
@@ -130,7 +130,7 @@ public class AutoClicker : MonoBehaviour
         boostActive = true; // Marcamos que el impulso está activo
         moneyPerClick *= 2; // Ajustamos moneyPerClick * 2
         boostTimer = boostDuration; // Inicializamos el temporizador del boost
-        AudioManager.instance.Play("Music"); // Iniciamos la música cuando comienza el boost
+        //AudioManager.instance.Play("Music"); // Iniciamos la música cuando comienza el boost
         yield return new WaitForSeconds(boostDuration); // Esperamos la duración del impulso
         boostActive = false; // Marcamos que el impulso ha terminado
         moneyPerClick = originalMoneyPerClick; // Restauramos el valor original de moneyPerClick
