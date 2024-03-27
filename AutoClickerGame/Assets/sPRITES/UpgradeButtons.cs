@@ -6,63 +6,41 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+[System.Serializable]
+public class Upgrade
+{
+    public string name;
+    public float cost;
+    public float clickPerSecondBonus;
+    public float clickPerTouchBonus;
+}
 public class UpgradeButtons : MonoBehaviour
 {
-    public TextMeshProUGUI costText;
-    public float cost = 10f;
-    public float upgradeValue = 1f;
+    public List<Upgrade> upgrades;
+    public TextMeshProUGUI moneyText;
     public AutoClicker autoClicker;
-    public bool Comprado;
-    public Image imagen;
-    private Transform tr;
-    private Button boton;
-    private void Awake()
+
+
+    private void Start()
     {
-        boton = GetComponent<Button>();
-        tr = GetComponent<Transform>();
-    }
-    void Start()
-    {
-        costText.text = "Cost: $" + cost.ToString("F2");
-        Comprado = false;
+        UpdateUI();
     }
 
-    public void PurchaseUpgrade()
+    public void PurchaseUpgrade(int index)
     {
-        if (Comprado == false)
+        Upgrade upgrade = upgrades[index];
+        if (autoClicker.money >= upgrade.cost)
         {
-            if (autoClicker.money >= cost)
-            {
-                autoClicker.money -= cost;
-                autoClicker.moneyText.text = "Money: $" + autoClicker.money.ToString("F2");
-                Upgrade();
-                Comprado = true;
-                boton.interactable = false;
-                AudioManager.instance.Play("pop");
-                tr.DOPunchScale(new Vector3(0.2f, 0.2f, 0.2f), 0.5f).OnComplete(() => { tr.localScale = Vector3.one; });
-                tr.localScale = Vector3.one;
-            }
-            else
-            {
-                AudioManager.instance.Play("error");
-            }
-        }
-        else
-        {
-            
-            Debug.Log("Ya esta comprado!");
+            autoClicker.money -= upgrade.cost;
+            autoClicker.AddClickPerSecond(upgrade.clickPerSecondBonus);
+            autoClicker.AddClickPerTouch(upgrade.clickPerTouchBonus);
+            UpdateUI();
         }
     }
 
-    private void Upgrade()
+    private void UpdateUI()
     {
-        var texto = gameObject.GetComponentInChildren<TextMeshProUGUI>();
-        texto.text = "Comprado";
-        imagen.color = Color.black;
-        autoClicker.moneyPerClick = upgradeValue;
-        autoClicker.originalMoneyPerClick = upgradeValue;
-        cost *= 2f;
-        costText.text = "Cost: $" + cost.ToString("F2");
-        
+        moneyText.text = "Money: " + autoClicker.money.ToString("C0");
+        // Actualizar visualización de mejoras
     }
 }

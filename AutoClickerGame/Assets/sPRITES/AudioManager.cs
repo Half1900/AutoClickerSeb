@@ -25,6 +25,7 @@ public class AudioManager : MonoBehaviour
             sound.source.volume = sound.volume;
             sound.source.loop = sound.loop;
             sound.source.playOnAwake = sound.playOnAwake;
+            sound.source.pitch = sound.pitch;
         }
     }
     public void AddSound(Sound sound)
@@ -42,6 +43,11 @@ public class AudioManager : MonoBehaviour
         {
             Debug.LogWarning("Sound with name " + name + " not found!");
         }
+    }
+    public Sound GetSound(string name)
+    {
+        Sound sound = sounds.Find(s => s.name == name);
+        return sound;
     }
 
     public void Stop(string name)
