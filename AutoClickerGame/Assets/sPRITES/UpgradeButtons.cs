@@ -5,43 +5,56 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-
-[System.Serializable]
-public class Upgrade
-{
-    public string name;
-    public float cost;
-    public float clickPerSecondBonus;
-    public float clickPerTouchBonus;
-}
 public class UpgradeButtons : MonoBehaviour
 {
-    public List<Upgrade> upgrades;
+    public List<UpgradesSO> upgrades;
     public TextMeshProUGUI moneyText;
     public AutoClicker autoClicker;
+    public List<GameObject> objetos;
+    public Button[] botones;
 
+    private void Awake()
+    {
+        if (objetos.Count != upgrades.Count)
+        {
+            Debug.LogError("La cantidad de objetos y actualizaciones no coincide.");
+            return;
+        }
+
+        for (int i = 0; i < objetos.Count; i++)
+        {
+            TextMeshProUGUI titulo = objetos[i].transform.Find("Titulo").GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI cost = objetos[i].transform.Find("Costo").GetComponent<TextMeshProUGUI>();
+            titulo.text = upgrades[i].name;
+            cost.text = upgrades[i].cost.ToString("N0");
+        }
+    }
 
     private void Start()
     {
-        UpdateUI();
+        for (int i = 0; i < botones.Length; i++)
+        {
+            int index = i;
+            botones[i].onClick.AddListener(() => PurchaseUpgrade(index));
+        }
     }
 
     public void PurchaseUpgrade(int index)
     {
-        Upgrade upgrade = upgrades[index];
+        if (index < 0 || index >= upgrades.Count)
+        {
+            Debug.LogError("Índice de actualización fuera de rango.");
+            return;
+        }
+
+        UpgradesSO upgrade = upgrades[index];
+
         if (autoClicker.money >= upgrade.cost)
         {
             AudioManager.instance.Play("Mejora");
             autoClicker.money -= upgrade.cost;
             autoClicker.AddClickPerSecond(upgrade.clickPerSecondBonus);
             autoClicker.AddClickPerTouch(upgrade.clickPerTouchBonus);
-            UpdateUI();
         }
-    }
-
-    private void UpdateUI()
-    {
-        moneyText.text = "Money: " + autoClicker.money.ToString("C0");
-        // Actualizar visualización de mejoras
     }
 }

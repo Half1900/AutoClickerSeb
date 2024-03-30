@@ -64,10 +64,11 @@ public class AutoClicker : MonoBehaviour
 
         // Actualizamos el temporizador de clics automáticos y generamos dinero automáticamente
         autoClickTimer += Time.deltaTime;
-        if (autoClickTimer >= 1f / autoClickRate)
+        if (autoClickTimer >= 1f)
         {
-            money += autoClickRate * moneyMultiplier;
-            autoClickTimer = 0f; // Reiniciar el temporizador
+            // Solo generar dinero automáticamente si ha pasado un segundo completo
+            money +=  autoClickRate * moneyMultiplier;
+            autoClickTimer = 0f;
         }
 
         // Actualizamos el texto del contador regresivo y el tiempo de boost
