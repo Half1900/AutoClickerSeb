@@ -66,10 +66,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: +1$
+  m_text: +1000000
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2a7302c232dc524459548a5b97ed8b60, type: 2}
-  m_sharedMaterial: {fileID: 4179416547319966327, guid: 2a7302c232dc524459548a5b97ed8b60, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9fcb35200100c13458ef87f1e9674706, type: 2}
+  m_sharedMaterial: {fileID: 4179416547319966327, guid: 9fcb35200100c13458ef87f1e9674706, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -93,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 45
+  m_fontSizeBase: 45
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -109,9 +109,9 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1

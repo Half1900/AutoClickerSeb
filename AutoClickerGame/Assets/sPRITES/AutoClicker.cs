@@ -38,7 +38,7 @@ public class AutoClicker : MonoBehaviour
     void Update()
     {
         
-        moneyText.text = "Ajolotes: " + money.ToString();
+        moneyText.text = money.ToString("N0");
 
         // Actualizamos el tiempo de boost y la cuenta regresiva en el mismo texto
         if (countdownTimer > 0)
@@ -108,10 +108,11 @@ public class AutoClicker : MonoBehaviour
         GameObject clickValueText = Instantiate(clickValueTextPrefab, canvasRect);
         clickValueText.transform.localPosition = localPoint;
         TextMeshProUGUI textMesh = clickValueText.GetComponent<TextMeshProUGUI>();
-        textMesh.text = "+" + (moneyPerClick * moneyMultiplier).ToString("C0");
+        textMesh.text = "+" + (moneyPerClick * moneyMultiplier).ToString("N0");
         // Animación de escala y movimiento
         Sequence mySequence = DOTween.Sequence();
         clickValueText.transform.localScale = Vector3.zero;
+        textMesh.DOFade(0f,3f);
         mySequence.Append(clickValueText.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack))
             .Append(clickValueText.transform.DOMove(Moveraqui.transform.position, 1f).SetEase(Ease.OutQuad)
             .OnComplete(() => { Destroy(clickValueText); }));
