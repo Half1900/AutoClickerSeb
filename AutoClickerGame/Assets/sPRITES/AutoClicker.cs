@@ -13,6 +13,7 @@ public class AutoClicker : MonoBehaviour
     public GameObject clickValueTextPrefab;
     public RectTransform canvasRect;
     public Transform Moveraqui;
+    public Image BackgroundAjolote;
 
     public float moneyPerClick = 1f;
     public float moneyMultiplier = 1f;
@@ -20,7 +21,6 @@ public class AutoClicker : MonoBehaviour
 
     public float money = 0f;
 
-    private bool gameEnded = false; // Variable para controlar si el juego ha terminado
     private float countdownTimer = 120f; // Contador regresivo de 2 minutos (120 segundos)
     private bool boostActive = false; // Variable para controlar si el impulso de moneyPerClick está activo
     private float boostDuration = 60f; // Duración del impulso de 1 minuto (60 segundos)
@@ -30,7 +30,7 @@ public class AutoClicker : MonoBehaviour
 
     private void Start()
     {
-        //AudioManager.instance.Play("Type");
+        //AudioManager.instance.Play("Music");
         originalMoneyPerClick = moneyPerClick; // Almacenamos el valor original de moneyPerClick al inicio del juego
         Application.targetFrameRate = 60;
     }
@@ -123,7 +123,7 @@ public class AutoClicker : MonoBehaviour
         if (Hacker.localScale == Vector3.one)
         {
             Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(Hacker.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.3f).OnComplete(() => { Hacker.localScale = Vector3.one; }));
+            mySequence.Append(BackgroundAjolote.DOFade(1f,0f)).Append(Hacker.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Hacker.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0f); }));
         }
     }
 

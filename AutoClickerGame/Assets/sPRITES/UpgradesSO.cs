@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="NewUpgrade",menuName ="Tools/Upgrades")]
 public class UpgradesSO : ScriptableObject
 {
-    public string name;
+    public string nombre;
     public float cost;
     public float clickPerSecondBonus;
     public float clickPerTouchBonus;

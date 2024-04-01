@@ -11,6 +11,7 @@ public class UpgradeButtons : MonoBehaviour
     public TextMeshProUGUI moneyText;
     public AutoClicker autoClicker;
     public List<GameObject> objetos;
+    public List<Image> Imagenes;
     public Button[] botones;
 
     private void Awake()
@@ -25,7 +26,7 @@ public class UpgradeButtons : MonoBehaviour
         {
             TextMeshProUGUI titulo = objetos[i].transform.Find("Titulo").GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI cost = objetos[i].transform.Find("Costo").GetComponent<TextMeshProUGUI>();
-            titulo.text = upgrades[i].name;
+            titulo.text = upgrades[i].nombre;
             cost.text = upgrades[i].cost.ToString("N0");
         }
     }
@@ -38,6 +39,18 @@ public class UpgradeButtons : MonoBehaviour
             botones[i].onClick.AddListener(() => PurchaseUpgrade(index));
         }
     }
+    /*private void Update()
+    {
+        for (int i = 0; i < objetos.Count; i++)
+        {
+            UpgradesSO UPGRADE = upgrades[i];
+            if (autoClicker.money >= UPGRADE.cost)
+            {
+               
+
+            }
+        }
+    }*/
 
     public void PurchaseUpgrade(int index)
     {
