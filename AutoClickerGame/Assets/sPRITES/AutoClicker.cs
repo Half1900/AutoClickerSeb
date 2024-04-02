@@ -28,9 +28,17 @@ public class AutoClicker : MonoBehaviour
     private float boostTimer = 0f; // Temporizador para rastrear el tiempo restante del boost
     private float autoClickTimer = 0f; // Temporizador para el clic automático
 
+
+
+
+    public GameObject spritePrefab;
+    public float upwardForce = 1f;
+    public float sideForce = 1f;
+    public float fadeDuration = 1f;
+
     private void Start()
     {
-        //AudioManager.instance.Play("Music");
+        AudioManager.instance.Play("Music");
         originalMoneyPerClick = moneyPerClick; // Almacenamos el valor original de moneyPerClick al inicio del juego
         Application.targetFrameRate = 60;
     }
@@ -38,7 +46,7 @@ public class AutoClicker : MonoBehaviour
     void Update()
     {
         
-        moneyText.text = money.ToString("N0");
+        moneyText.text = "Ajolotes: " + money.ToString("N0");
 
         // Actualizamos el tiempo de boost y la cuenta regresiva en el mismo texto
         if (countdownTimer > 0)
@@ -98,7 +106,7 @@ public class AutoClicker : MonoBehaviour
     public void Click()
     {
         var sound = AudioManager.instance.GetSound("Type");
-        float numrand = Random.Range(2f, 2.8f);
+        float numrand = Random.Range(1.5f, 3f);
         sound.source.pitch = numrand;
         sound.source.Play();
         money += moneyPerClick * moneyMultiplier;
@@ -111,12 +119,50 @@ public class AutoClicker : MonoBehaviour
         TextMeshProUGUI textMesh = clickValueText.GetComponent<TextMeshProUGUI>();
         textMesh.text = "+" + (moneyPerClick * moneyMultiplier).ToString("N0");
         // Animación de escala y movimiento
+        AnimDes();
         Sequence mySequence = DOTween.Sequence();
         clickValueText.transform.localScale = Vector3.zero;
         textMesh.DOFade(0f,3f);
         mySequence.Append(clickValueText.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack))
             .Append(clickValueText.transform.DOMove(Moveraqui.transform.position, 1f).SetEase(Ease.OutQuad)
             .OnComplete(() => { Destroy(clickValueText); }));
+    }
+    public void AnimDes()
+    {
+        // Comprobamos si canvasRect es nulo antes de continuar
+        if (canvasRect == null)
+        {
+            Debug.LogWarning("CanvasRect es nulo. No se puede animar el sprite.");
+            return;
+        }
+
+        // Instanciamos el objeto sprite
+        GameObject spriteObject = Instantiate(spritePrefab, canvasRect);
+
+        // Obtenemos el RectTransform del sprite
+        RectTransform rectTransform = spriteObject.GetComponent<RectTransform>();
+
+        // Comprobamos si el RectTransform es nulo antes de continuar
+        if (rectTransform == null)
+        {
+            Debug.LogWarning("RectTransform es nulo. No se puede animar el sprite.");
+            Destroy(spriteObject); // Destruimos el objeto si el RectTransform es nulo
+            return;
+        }
+
+        // Calculamos la posición final después del impulso
+        Vector3 targetPosition = rectTransform.localPosition + Vector3.up * upwardForce +
+                                 (Vector3)(Random.insideUnitCircle * sideForce); // Convertir Vector2 a Vector3
+
+        // Obtenemos el componente Image del sprite
+        Image image = spriteObject.GetComponent<Image>();
+
+        // Creamos una secuencia de animaciones con DoTween
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(rectTransform.DOLocalMove(targetPosition, fadeDuration).SetEase(Ease.OutQuad))
+                .Join(image.DOFade(0f, fadeDuration * 2f)) // Hacemos que el sprite se desvanezca
+                .Append(rectTransform.DOLocalMove(rectTransform.localPosition - Vector3.up * 50f, 1f).SetEase(Ease.InQuad)) // Simulamos la caída con gravedad
+                .OnComplete(() => { Destroy(spriteObject); }); // Destruimos el objeto después de la animación
     }
     public void HackerAnim()
     {
