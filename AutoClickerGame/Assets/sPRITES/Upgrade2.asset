@@ -16,4 +16,4 @@ MonoBehaviour:
   cost: 100
   clickPerSecondBonus: 1
   clickPerTouchBonus: 0
-  TypeUpgrade: 1
+  Activado: 0

@@ -10,11 +10,5 @@ public class UpgradesSO : ScriptableObject
     public float cost;
     public float clickPerSecondBonus;
     public float clickPerTouchBonus;
-    public TypeUpgrade TypeUpgrade = TypeUpgrade.None;
-}
-public enum TypeUpgrade
-{
-    None,
-    Second,
-    Touch
+    public bool Activado = false; 
 }

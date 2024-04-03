@@ -14,6 +14,7 @@ public class AutoClicker : MonoBehaviour
     public RectTransform canvasRect;
     public Transform Moveraqui;
     public Image BackgroundAjolote;
+    public RainEfect rainefect;
 
     public float moneyPerClick = 1f;
     public float moneyMultiplier = 1f;
@@ -45,8 +46,8 @@ public class AutoClicker : MonoBehaviour
 
     void Update()
     {
-        
-        moneyText.text = "Ajolotes: " + money.ToString("N0");
+
+        moneyText.text = string.Format($"Ajolotes: {money.ToString("N0")}\nAjolotes per second: {autoClickRate}");
 
         // Actualizamos el tiempo de boost y la cuenta regresiva en el mismo texto
         if (countdownTimer > 0)
@@ -66,18 +67,15 @@ public class AutoClicker : MonoBehaviour
                 boostTimer = 0;
                 boostActive = false; // Desactivamos el boost cuando el tiempo restante llega a cero
                 moneyPerClick = originalMoneyPerClick; // Restauramos el valor original de moneyPerClick
-                //AudioManager.instance.Stop("Music"); // Detenemos la música cuando el boost termina
+                                                       //AudioManager.instance.Stop("Music"); // Detenemos la música cuando el boost termina
             }
         }
 
-        // Actualizamos el temporizador de clics automáticos y generamos dinero automáticamente
-        autoClickTimer += Time.deltaTime;
-        if (autoClickTimer >= 1f)
-        {
-            // Solo generar dinero automáticamente si ha pasado un segundo completo
-            money +=  autoClickRate * moneyMultiplier;
-            autoClickTimer = 0f;
-        }
+        // Calcular cuánto dinero debería generarse en este momento
+        float moneyGeneratedThisFrame = autoClickRate * moneyMultiplier * Time.deltaTime;
+
+        // Incrementar el dinero total
+        money += moneyGeneratedThisFrame;
 
         // Actualizamos el texto del contador regresivo y el tiempo de boost
         UpdateCountdownAndBoostText();
@@ -164,22 +162,15 @@ public class AutoClicker : MonoBehaviour
                 .Append(rectTransform.DOLocalMove(rectTransform.localPosition - Vector3.up * 50f, 1f).SetEase(Ease.InQuad)) // Simulamos la caída con gravedad
                 .OnComplete(() => { Destroy(spriteObject); }); // Destruimos el objeto después de la animación
     }
-    public void HackerAnim()
-    {
-        if (Hacker.localScale == Vector3.one)
-        {
-            Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(BackgroundAjolote.DOFade(1f,0f)).Append(Hacker.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Hacker.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0f); }));
-        }
-    }
-
     IEnumerator ActivateBoost()
     {
         boostActive = true; // Marcamos que el impulso está activo
         moneyPerClick *= 2; // Ajustamos moneyPerClick * 2
         boostTimer = boostDuration; // Inicializamos el temporizador del boost
         //AudioManager.instance.Play("Music"); // Iniciamos la música cuando comienza el boost
+        var coroutine = StartCoroutine(rainefect.SpawnRaindrops());
         yield return new WaitForSeconds(boostDuration); // Esperamos la duración del impulso
+        StopCoroutine(coroutine);
         boostActive = false; // Marcamos que el impulso ha terminado
         moneyPerClick = originalMoneyPerClick; // Restauramos el valor original de moneyPerClick
         countdownTimer = 120f; // Reiniciamos el contador regresivo
