@@ -6,7 +6,9 @@ using UnityEngine.Advertisements;
 public class AdsInitializer : MonoBehaviour,IUnityAdsInitializationListener
 {
     [SerializeField] string _androidGameId;
+    [SerializeField] string _iOSGameId;
     [SerializeField] bool _testMode = true;
+    public Banner banner;
     private string _gameId;
 
     void Awake()
@@ -16,10 +18,12 @@ public class AdsInitializer : MonoBehaviour,IUnityAdsInitializationListener
 
     public void InitializeAds()
     {
-#if UNITY_ANDROID
+#if UNITY_IOS
+            _gameId = _iOSGameId;
+#elif UNITY_ANDROID
         _gameId = _androidGameId;
 #elif UNITY_EDITOR
-            _gameId = _androidGameId;
+            _gameId = _androidGameId; //Only for testing the functionality in the Editor
 #endif
         if (!Advertisement.isInitialized && Advertisement.isSupported)
         {
@@ -31,6 +35,7 @@ public class AdsInitializer : MonoBehaviour,IUnityAdsInitializationListener
     public void OnInitializationComplete()
     {
         Debug.Log("Unity Ads initialization complete.");
+        banner.LoadBanner();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)

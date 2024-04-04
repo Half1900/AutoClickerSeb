@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1e67d02ebee1374f977f36875ce4932, type: 3}
-  m_Name: Upgrade3
+  m_Name: Upgrade13
   m_EditorClassIdentifier: 
-  nombre: +5 Ajolote per click
-  cost: 500
+  nombre: +100k Ajolote per click
+  cost: 1.8e+9
   clickPerSecondBonus: 0
-  clickPerTouchBonus: 5
+  clickPerTouchBonus: 100000
   Activado: 0
