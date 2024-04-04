@@ -2677,7 +2677,7 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: Type
     clip: {fileID: 8300000, guid: 7a68e86e2578c2f4dae3f4d875d7c931, type: 3}
-    volume: 0.6
+    volume: 0.4
     pitch: 1
     playOnAwake: 0
     loop: 0
