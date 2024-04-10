@@ -24,24 +24,25 @@ public class AutoClicker : MonoBehaviour
     public float money = 0f;
 
     private float countdownTimer = 120f;
-    private bool boostActive = false;
-    private float boostDuration = 60f;
-    private float originalMoneyPerClick; 
+    public bool boostActive = false;
+    public float boostDuration = 60f;
+    private float originalMoneyPerClick;
+    private float originalMoneyPerSecond;
     private float boostTimer = 0f; 
-    private float autoClickTimer = 0f; 
-
-
-
+    private float autoClickTimer = 0f;
+    public float multiplicador = 2;
 
     public GameObject spritePrefab;
     public float upwardForce = 1f;
     public float sideForce = 1f;
     public float fadeDuration = 1f;
+    public TextMeshProUGUI TEXTOX;
 
     private void Start()
     {
         AudioManager.instance.Play("Music");
         originalMoneyPerClick = moneyPerClick; // Almacenamos el valor original de moneyPerClick al inicio del juego
+        originalMoneyPerSecond = autoClickRate;
         Application.targetFrameRate = 60;
 
         banner.LoadBanner();
@@ -50,7 +51,7 @@ public class AutoClicker : MonoBehaviour
     void Update()
     {
 
-        moneyText.text = string.Format($"Ajolotes: {money.ToString("N0")}\nAjolotes per second: {autoClickRate}");
+        moneyText.text = string.Format($"Ajolotes: { AbbreviateNumber(money)}\nAjolotes per second: {AbbreviateNumber(autoClickRate)}\nAjolotes per Click: {AbbreviateNumber(moneyPerClick)}");
 
         if (countdownTimer > 0)
         {
@@ -63,13 +64,16 @@ public class AutoClicker : MonoBehaviour
         }
         else if (boostActive)
         {
-            boostTimer -= Time.deltaTime;
+            countdownTimer -= Time.deltaTime;
             if (boostTimer <= 0)
             {
                 boostTimer = 0;
                 boostActive = false; // Desactivamos el boost cuando el tiempo restante llega a cero
                 moneyPerClick = originalMoneyPerClick; // Restauramos el valor original de moneyPerClick
-                                                       //AudioManager.instance.Stop("Music"); // Detenemos la música cuando el boost termina
+                autoClickRate = originalMoneyPerSecond;
+                multiplicador = 2;
+                TEXTOX.text = "X2";
+                boostDuration = 60f;
             }
         }
 
@@ -82,7 +86,17 @@ public class AutoClicker : MonoBehaviour
 
     public void AddClickPerSecond(float bonus)
     {
-        autoClickRate += bonus;
+        if (boostActive == true)
+        {
+            originalMoneyPerSecond += bonus;
+            autoClickRate = originalMoneyPerSecond * multiplicador;
+        }
+        else
+        {
+            autoClickRate = originalMoneyPerSecond;
+            autoClickRate += bonus;
+            originalMoneyPerSecond = autoClickRate;
+        }
     }
 
     public void AddClickPerTouch(float bonus)
@@ -90,7 +104,7 @@ public class AutoClicker : MonoBehaviour
         if (boostActive == true)
         {
             originalMoneyPerClick += bonus;
-            moneyPerClick = originalMoneyPerClick * 2;
+            moneyPerClick = originalMoneyPerClick * multiplicador;
         }
         else
         {
@@ -113,7 +127,7 @@ public class AutoClicker : MonoBehaviour
         GameObject clickValueText = Instantiate(clickValueTextPrefab, canvasRect);
         clickValueText.transform.localPosition = localPoint;
         TextMeshProUGUI textMesh = clickValueText.GetComponent<TextMeshProUGUI>();
-        textMesh.text = "+" + (moneyPerClick * moneyMultiplier).ToString("N0");
+        textMesh.text = "+" + AbbreviateNumber(moneyPerClick * moneyMultiplier);
         AnimDes();
         Sequence mySequence = DOTween.Sequence();
         clickValueText.transform.localScale = Vector3.zero;
@@ -160,20 +174,22 @@ public class AutoClicker : MonoBehaviour
             mySequence.Append(BackgroundAjolote.DOFade(1f, 0f)).Append(Hacker.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Hacker.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0f); }));
         }
     }
-    IEnumerator ActivateBoost()
+    public IEnumerator ActivateBoost()
     {
         boostActive = true;
-        moneyPerClick *= 2;
-        boostTimer = boostDuration;
+        moneyPerClick *= multiplicador;
+        autoClickRate *= multiplicador;
+        countdownTimer = boostDuration;
         var coroutine = StartCoroutine(rainefect.SpawnRaindrops());
         yield return new WaitForSeconds(boostDuration); 
         StopCoroutine(coroutine);
         boostActive = false;
         moneyPerClick = originalMoneyPerClick;
+        autoClickRate = originalMoneyPerSecond;
         countdownTimer = 120f;
     }
 
-    void UpdateCountdownAndBoostText()
+    public void UpdateCountdownAndBoostText()
     {
         // Calculamos los minutos y segundos restantes para el contador regresivo
         int minutes = Mathf.FloorToInt(countdownTimer / 60f);
@@ -181,11 +197,34 @@ public class AutoClicker : MonoBehaviour
         string countdownText = string.Format("{0:00}:{1:00}", minutes, seconds);
 
         // Calculamos los minutos y segundos restantes para el boost
-        minutes = Mathf.FloorToInt(boostTimer / 60f);
-        seconds = Mathf.FloorToInt(boostTimer % 60f);
+        minutes = Mathf.FloorToInt(countdownTimer / 60f);
+        seconds = Mathf.FloorToInt(countdownTimer % 60f);
         string boostText = string.Format("{0:00}:{1:00}", minutes, seconds);
 
         // Actualizamos el texto para mostrar tanto la cuenta regresiva como el tiempo de boost
         countdownAndBoostText.text = boostActive ? boostText : countdownText;
+    }
+    string AbbreviateNumber(double number)
+    {
+        if (number >= 1e12) // Más de un billón
+        {
+            return (number / 1e12).ToString("0.###") + "T";
+        }
+        else if (number >= 1e9) // Más de mil millones
+        {
+            return (number / 1e9).ToString("0.###") + "B";
+        }
+        else if (number >= 1e6) // Más de un millón
+        {
+            return (number / 1e6).ToString("0.###") + "M";
+        }
+        else if (number >= 1e3) // Más de mil
+        {
+            return (number / 1e3).ToString("0.###") + "K";
+        }
+        else
+        {
+            return number.ToString("0");
+        }
     }
 }

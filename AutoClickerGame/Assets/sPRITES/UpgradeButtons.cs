@@ -12,7 +12,6 @@ public class UpgradeButtons : MonoBehaviour
     public AutoClicker autoClicker;
     public List<GameObject> objetos;
     public List<Image> Imagenes;
-    public Button[] botones;
 
     private void Awake()
     {
@@ -25,17 +24,8 @@ public class UpgradeButtons : MonoBehaviour
         for (int i = 0; i < objetos.Count; i++)
         {
             TextMeshProUGUI cost = objetos[i].transform.Find("Costo").GetComponent<TextMeshProUGUI>();
-            cost.text = upgrades[i].cost.ToString("N0");
+            cost.text = AbbreviateNumber(upgrades[i].cost);
             upgrades[i].Activado = false;
-        }
-    }
-
-    private void Start()
-    {
-        for (int i = 0; i < botones.Length; i++)
-        {
-            int index = i;
-            botones[i].onClick.AddListener(() => PurchaseUpgrade(index));
         }
     }
     private void Update()
@@ -75,6 +65,29 @@ public class UpgradeButtons : MonoBehaviour
             autoClicker.money -= upgrade.cost;
             autoClicker.AddClickPerSecond(upgrade.clickPerSecondBonus);
             autoClicker.AddClickPerTouch(upgrade.clickPerTouchBonus);
+        }
+    }
+    string AbbreviateNumber(double number)
+    {
+        if (number >= 1e12) // Más de un billón
+        {
+            return (number / 1e12).ToString("0.###") + "T";
+        }
+        else if (number >= 1e9) // Más de mil millones
+        {
+            return (number / 1e9).ToString("0.###") + "B";
+        }
+        else if (number >= 1e6) // Más de un millón
+        {
+            return (number / 1e6).ToString("0.###") + "M";
+        }
+        else if (number >= 1e3) // Más de mil
+        {
+            return (number / 1e3).ToString("0.###") + "K";
+        }
+        else
+        {
+            return number.ToString("0");
         }
     }
 }
