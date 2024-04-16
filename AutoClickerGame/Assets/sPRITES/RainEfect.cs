@@ -5,12 +5,23 @@ using UnityEngine;
 
 public class RainEfect : MonoBehaviour
 {
+    public static RainEfect Instance;
     public GameObject raindrops;
     public int numberOfRaindrops = 30;
     public float fallDuration = 2f;
     public RectTransform canvasRect;
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
-    
     public IEnumerator SpawnRaindrops()
     {
         while (true) // Bucle infinito

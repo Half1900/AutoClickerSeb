@@ -14,8 +14,6 @@ public class AutoClicker : MonoBehaviour
     public RectTransform canvasRect;
     public Transform Moveraqui;
     public Image BackgroundAjolote;
-    public RainEfect rainefect;
-    public Banner banner;
 
     public float moneyPerClick = 1f;
     public float moneyMultiplier = 1f;
@@ -37,15 +35,25 @@ public class AutoClicker : MonoBehaviour
     public float sideForce = 1f;
     public float fadeDuration = 1f;
     public TextMeshProUGUI TEXTOX;
+    public static AutoClicker instance;
 
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
     private void Start()
     {
         AudioManager.instance.Play("Music");
         originalMoneyPerClick = moneyPerClick; // Almacenamos el valor original de moneyPerClick al inicio del juego
         originalMoneyPerSecond = autoClickRate;
         Application.targetFrameRate = 60;
-
-        banner.LoadBanner();
     }
 
     void Update()
@@ -71,9 +79,6 @@ public class AutoClicker : MonoBehaviour
                 boostActive = false; // Desactivamos el boost cuando el tiempo restante llega a cero
                 moneyPerClick = originalMoneyPerClick; // Restauramos el valor original de moneyPerClick
                 autoClickRate = originalMoneyPerSecond;
-                multiplicador = 2;
-                TEXTOX.text = "X2";
-                boostDuration = 60f;
             }
         }
 
@@ -180,13 +185,16 @@ public class AutoClicker : MonoBehaviour
         moneyPerClick *= multiplicador;
         autoClickRate *= multiplicador;
         countdownTimer = boostDuration;
-        var coroutine = StartCoroutine(rainefect.SpawnRaindrops());
+        var coroutine = StartCoroutine(RainEfect.Instance.SpawnRaindrops());
         yield return new WaitForSeconds(boostDuration); 
-        StopCoroutine(coroutine);
         boostActive = false;
+        multiplicador = 2;
+        TEXTOX.text = "X2";
+        boostDuration = 60f;
         moneyPerClick = originalMoneyPerClick;
         autoClickRate = originalMoneyPerSecond;
         countdownTimer = 120f;
+        StopAllCoroutines();
     }
 
     public void UpdateCountdownAndBoostText()

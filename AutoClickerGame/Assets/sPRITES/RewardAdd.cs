@@ -9,21 +9,13 @@ public class RewardAdd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
 {
     [SerializeField] Button _showAdButton;
     [SerializeField] string _androidAdUnitId = "Rewarded_Android";
-    [SerializeField] string _iOSAdUnitId = "Rewarded_iOS";
-    public AutoClicker _autoClicker;
-    public TextMeshProUGUI texto;
-    string adUnitId = null; // This will remain null for unsupported platforms
-
+    string adUnitId = null;
     void Awake()
     {
-        // Get the Ad Unit ID for the current platform:
-#if UNITY_IOS
-        adUnitId = _iOSAdUnitId;
-#elif UNITY_ANDROID
+#if UNITY_ANDROID
         adUnitId = _androidAdUnitId;
 #endif
 
-        // Disable the button until the ad is ready to show:
         _showAdButton.interactable = true;
     }
     public void LoadRewardedAd()
@@ -61,11 +53,10 @@ public class RewardAdd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
         if (placementId == adUnitId && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
             Debug.Log("Ads Fully Watched .....");
-            _autoClicker.multiplicador = 5;
-            _autoClicker.boostDuration = 120f;
-            texto.text = "X5";
-            StartCoroutine(_autoClicker.ActivateBoost());
-            _autoClicker.UpdateCountdownAndBoostText();
+            AutoClicker.instance.multiplicador = 5;
+            AutoClicker.instance.boostDuration = 120f;
+            AutoClicker.instance.TEXTOX.text = "X5";
+            StartCoroutine(AutoClicker.instance.ActivateBoost());
         }
     }
     #endregion
