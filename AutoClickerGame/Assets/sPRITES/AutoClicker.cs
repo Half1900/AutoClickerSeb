@@ -5,11 +5,17 @@ using TMPro;
 using DG.Tweening;
 using UnityEngine.UI;
 
+public enum StateMultiplier
+{
+    None,
+    Dos,
+    Cinco
+}
 public class AutoClicker : MonoBehaviour
 {
     public TextMeshProUGUI moneyText;
     public TextMeshProUGUI countdownAndBoostText;
-    public Transform Hacker;
+    public Transform Ajolote;
     public GameObject clickValueTextPrefab;
     public RectTransform canvasRect;
     public Transform Moveraqui;
@@ -21,14 +27,11 @@ public class AutoClicker : MonoBehaviour
 
     public float money = 0f;
 
-    private float countdownTimer = 120f;
     public bool boostActive = false;
     public float boostDuration = 60f;
     private float originalMoneyPerClick;
     private float originalMoneyPerSecond;
-    private float boostTimer = 0f; 
-    private float autoClickTimer = 0f;
-    public float multiplicador = 2;
+    public float multiplicador = 2f;
 
     public GameObject spritePrefab;
     public float upwardForce = 1f;
@@ -36,12 +39,15 @@ public class AutoClicker : MonoBehaviour
     public float fadeDuration = 1f;
     public TextMeshProUGUI TEXTOX;
     public static AutoClicker instance;
+    public StateMultiplier stateMultiplier;
+    public bool BoostCinco;
+    private Coroutine anim;
 
     private void Awake()
     {
         if (instance != null)
         {
-            Destroy(gameObject);
+            Destroy(instance);
         }
         else
         {
@@ -50,43 +56,27 @@ public class AutoClicker : MonoBehaviour
     }
     private void Start()
     {
+        stateMultiplier = StateMultiplier.None;
         AudioManager.instance.Play("Music");
-        originalMoneyPerClick = moneyPerClick; // Almacenamos el valor original de moneyPerClick al inicio del juego
+        originalMoneyPerClick = moneyPerClick;
         originalMoneyPerSecond = autoClickRate;
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 90;
     }
 
     void Update()
     {
-
-        moneyText.text = string.Format($"Ajolotes: { AbbreviateNumber(money)}\nAjolotes per second: {AbbreviateNumber(autoClickRate)}\nAjolotes per Click: {AbbreviateNumber(moneyPerClick)}");
-
-        if (countdownTimer > 0)
+       
+        moneyText.text = string.Format($"Ajolotes: { NumberAbbreviator.AbbreviateNumber(money)}");
+        
+        if (boostActive == false)
         {
-            countdownTimer -= Time.deltaTime;
-            if (countdownTimer <= 0)
-            {
-                countdownTimer = 0;
-                StartCoroutine(ActivateBoost()); // Iniciamos un nuevo boost cuando el contador llegue a cero
-            }
-        }
-        else if (boostActive)
-        {
-            countdownTimer -= Time.deltaTime;
-            if (boostTimer <= 0)
-            {
-                boostTimer = 0;
-                boostActive = false; // Desactivamos el boost cuando el tiempo restante llega a cero
-                moneyPerClick = originalMoneyPerClick; // Restauramos el valor original de moneyPerClick
-                autoClickRate = originalMoneyPerSecond;
-            }
+            moneyPerClick = originalMoneyPerClick;
+            autoClickRate = originalMoneyPerSecond;
         }
 
         float moneyGeneratedThisFrame = autoClickRate * moneyMultiplier * Time.deltaTime;
 
         money += moneyGeneratedThisFrame;
-
-        UpdateCountdownAndBoostText();
     }
 
     public void AddClickPerSecond(float bonus)
@@ -95,23 +85,46 @@ public class AutoClicker : MonoBehaviour
         {
             originalMoneyPerSecond += bonus;
             autoClickRate = originalMoneyPerSecond * multiplicador;
-        }
-        else
+        }else
         {
             autoClickRate = originalMoneyPerSecond;
             autoClickRate += bonus;
             originalMoneyPerSecond = autoClickRate;
         }
     }
+    public void ChangeState(StateMultiplier state)
+    {
+        stateMultiplier = state;
 
+        switch (state)
+        {
+            case StateMultiplier.None:
+                moneyMultiplier = 1f;
+                StopAllCoroutines();
+                break;
+            case StateMultiplier.Dos:
+                moneyMultiplier = 2f;
+                StartCoroutine(RainEfect.Instance.SpawnRaindrops());
+                break;
+            case StateMultiplier.Cinco:
+                BoostCinco = true;
+                moneyMultiplier = 5f;
+                TEXTOX.text = "X5";
+                StartCoroutine(RainEfect.Instance.SpawnRaindrops());
+                break;
+        }
+    }
+    public void ActiveAndDesactiveBoost()
+    {
+        boostActive = !boostActive;
+    }
     public void AddClickPerTouch(float bonus)
     {
         if (boostActive == true)
         {
             originalMoneyPerClick += bonus;
             moneyPerClick = originalMoneyPerClick * multiplicador;
-        }
-        else
+        }else
         {
             moneyPerClick = originalMoneyPerClick;
             moneyPerClick += bonus;
@@ -132,8 +145,8 @@ public class AutoClicker : MonoBehaviour
         GameObject clickValueText = Instantiate(clickValueTextPrefab, canvasRect);
         clickValueText.transform.localPosition = localPoint;
         TextMeshProUGUI textMesh = clickValueText.GetComponent<TextMeshProUGUI>();
-        textMesh.text = "+" + AbbreviateNumber(moneyPerClick * moneyMultiplier);
-        AnimDes();
+        textMesh.text = "+" + NumberAbbreviator.AbbreviateNumber(moneyPerClick * moneyMultiplier);
+        AnimDes(localPoint);
         Sequence mySequence = DOTween.Sequence();
         clickValueText.transform.localScale = Vector3.zero;
         textMesh.DOFade(0f,3f);
@@ -141,7 +154,7 @@ public class AutoClicker : MonoBehaviour
             .Append(clickValueText.transform.DOMove(Moveraqui.transform.position, 1f).SetEase(Ease.OutQuad)
             .OnComplete(() => { Destroy(clickValueText); }));
     }
-    public void AnimDes()
+    public void AnimDes(Vector2 localPoint)
     {
         if (canvasRect == null)
         {
@@ -150,6 +163,7 @@ public class AutoClicker : MonoBehaviour
         }
 
         GameObject spriteObject = Instantiate(spritePrefab, canvasRect);
+        spriteObject.transform.localPosition = localPoint;
 
         RectTransform rectTransform = spriteObject.GetComponent<RectTransform>();
 
@@ -173,66 +187,10 @@ public class AutoClicker : MonoBehaviour
     }
     public void HackerAnim()
     {
-        if (Hacker.localScale == Vector3.one)
+        if (Ajolote.localScale == Vector3.one)
         {
             Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(BackgroundAjolote.DOFade(1f, 0f)).Append(Hacker.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Hacker.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0f); }));
-        }
-    }
-    public IEnumerator ActivateBoost()
-    {
-        boostActive = true;
-        moneyPerClick *= multiplicador;
-        autoClickRate *= multiplicador;
-        countdownTimer = boostDuration;
-        var coroutine = StartCoroutine(RainEfect.Instance.SpawnRaindrops());
-        yield return new WaitForSeconds(boostDuration); 
-        boostActive = false;
-        multiplicador = 2;
-        TEXTOX.text = "X2";
-        boostDuration = 60f;
-        moneyPerClick = originalMoneyPerClick;
-        autoClickRate = originalMoneyPerSecond;
-        countdownTimer = 120f;
-        StopAllCoroutines();
-    }
-
-    public void UpdateCountdownAndBoostText()
-    {
-        // Calculamos los minutos y segundos restantes para el contador regresivo
-        int minutes = Mathf.FloorToInt(countdownTimer / 60f);
-        int seconds = Mathf.FloorToInt(countdownTimer % 60f);
-        string countdownText = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-        // Calculamos los minutos y segundos restantes para el boost
-        minutes = Mathf.FloorToInt(countdownTimer / 60f);
-        seconds = Mathf.FloorToInt(countdownTimer % 60f);
-        string boostText = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-        // Actualizamos el texto para mostrar tanto la cuenta regresiva como el tiempo de boost
-        countdownAndBoostText.text = boostActive ? boostText : countdownText;
-    }
-    string AbbreviateNumber(double number)
-    {
-        if (number >= 1e12) // Más de un billón
-        {
-            return (number / 1e12).ToString("0.###") + "T";
-        }
-        else if (number >= 1e9) // Más de mil millones
-        {
-            return (number / 1e9).ToString("0.###") + "B";
-        }
-        else if (number >= 1e6) // Más de un millón
-        {
-            return (number / 1e6).ToString("0.###") + "M";
-        }
-        else if (number >= 1e3) // Más de mil
-        {
-            return (number / 1e3).ToString("0.###") + "K";
-        }
-        else
-        {
-            return number.ToString("0");
+            mySequence.Append(BackgroundAjolote.DOFade(1f, 0f)).Append(Ajolote.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Ajolote.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0f); }));
         }
     }
 }

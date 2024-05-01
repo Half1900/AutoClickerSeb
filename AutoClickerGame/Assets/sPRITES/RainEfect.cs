@@ -14,7 +14,7 @@ public class RainEfect : MonoBehaviour
     {
         if (Instance != null)
         {
-            Destroy(gameObject);
+            Destroy(Instance);
         }
         else
         {

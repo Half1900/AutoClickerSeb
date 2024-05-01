@@ -24,7 +24,7 @@ public class UpgradeButtons : MonoBehaviour
         for (int i = 0; i < objetos.Count; i++)
         {
             TextMeshProUGUI cost = objetos[i].transform.Find("Costo").GetComponent<TextMeshProUGUI>();
-            cost.text = AbbreviateNumber(upgrades[i].cost);
+            cost.text = NumberAbbreviator.AbbreviateNumber(upgrades[i].cost);
             upgrades[i].Activado = false;
         }
     }
@@ -67,7 +67,10 @@ public class UpgradeButtons : MonoBehaviour
             autoClicker.AddClickPerTouch(upgrade.clickPerTouchBonus);
         }
     }
-    string AbbreviateNumber(double number)
+}
+public static class NumberAbbreviator
+{
+    public static string AbbreviateNumber(double number)
     {
         if (number >= 1e12) // Más de un billón
         {

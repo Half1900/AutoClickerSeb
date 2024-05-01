@@ -52,11 +52,7 @@ public class RewardAdd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
     {
         if (placementId == adUnitId && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
-            Debug.Log("Ads Fully Watched .....");
-            AutoClicker.instance.multiplicador = 5;
-            AutoClicker.instance.boostDuration = 120f;
-            AutoClicker.instance.TEXTOX.text = "X5";
-            StartCoroutine(AutoClicker.instance.ActivateBoost());
+            AutoClicker.instance.ChangeState(StateMultiplier.Cinco);
         }
     }
     #endregion
