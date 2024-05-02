@@ -20,6 +20,8 @@ public class AutoClicker : MonoBehaviour
     public RectTransform canvasRect;
     public Transform Moveraqui;
     public Image BackgroundAjolote;
+    public List<UpgradesSO> upgrades = new List<UpgradesSO>();
+    public List<UpgradeData> upgradeData = new List<UpgradeData>();
 
     public float moneyPerClick = 1f;
     public float moneyMultiplier = 1f;
@@ -42,6 +44,7 @@ public class AutoClicker : MonoBehaviour
     public StateMultiplier stateMultiplier;
     public bool BoostCinco;
     private Coroutine anim;
+    public List<Sound> Sounds;
 
     private void Awake()
     {
@@ -54,8 +57,37 @@ public class AutoClicker : MonoBehaviour
             instance = this;
         }
     }
+    // Método para cargar datos del jugador
+    public void CargarDatos()
+    {
+        PlayerData playerData = SaveManager.LoadPlayerData();
+        moneyPerClick = playerData.moneyPerClick;
+        autoClickRate = playerData.autoClickRate;
+        money = playerData.money;
+        upgradeData = playerData.upgradeData; // Cambio aquí
+    }
+
+    // Método para guardar datos del jugador
+    public void GuardarDatos()
+    {
+        SaveManager.SavePlayerData(this);
+    }
     private void Start()
     {
+        // Cargar datos del jugador
+        if (SaveManager.LoadPlayerData() == null)
+        {
+            SaveManager.SavePlayerData(this);
+        }
+        else
+        {
+            CargarDatos();
+        }
+        Sound soundUno = AudioManager.instance.GetSound("Type");
+        Sound soundDos = AudioManager.instance.GetSound("TypeDos");
+        Sounds.Add(soundUno);
+        Sounds.Add(soundDos);
+
         stateMultiplier = StateMultiplier.None;
         AudioManager.instance.Play("Music");
         originalMoneyPerClick = moneyPerClick;
@@ -65,8 +97,11 @@ public class AutoClicker : MonoBehaviour
 
     void Update()
     {
-       
-        moneyText.text = string.Format($"Ajolotes: { NumberAbbreviator.AbbreviateNumber(money)}");
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            SaveManager.DeletePlayerData();
+        }
+        moneyText.text = string.Format($"Axolotl: { NumberAbbreviator.AbbreviateNumber(money)}");
         
         if (boostActive == false)
         {
@@ -85,7 +120,8 @@ public class AutoClicker : MonoBehaviour
         {
             originalMoneyPerSecond += bonus;
             autoClickRate = originalMoneyPerSecond * multiplicador;
-        }else
+        }
+        else
         {
             autoClickRate = originalMoneyPerSecond;
             autoClickRate += bonus;
@@ -101,16 +137,25 @@ public class AutoClicker : MonoBehaviour
             case StateMultiplier.None:
                 moneyMultiplier = 1f;
                 StopAllCoroutines();
+                RainEfect.Instance.CanSpawn = true;
                 break;
             case StateMultiplier.Dos:
                 moneyMultiplier = 2f;
-                StartCoroutine(RainEfect.Instance.SpawnRaindrops());
+                if (RainEfect.Instance.CanSpawn)
+                {
+                    StartCoroutine(RainEfect.Instance.SpawnRaindrops());
+                    RainEfect.Instance.CanSpawn = false;
+                }
                 break;
             case StateMultiplier.Cinco:
                 BoostCinco = true;
                 moneyMultiplier = 5f;
                 TEXTOX.text = "X5";
-                StartCoroutine(RainEfect.Instance.SpawnRaindrops());
+                if (RainEfect.Instance.CanSpawn)
+                {
+                    StartCoroutine(RainEfect.Instance.SpawnRaindrops());
+                    RainEfect.Instance.CanSpawn = false;
+                }
                 break;
         }
     }
@@ -124,7 +169,8 @@ public class AutoClicker : MonoBehaviour
         {
             originalMoneyPerClick += bonus;
             moneyPerClick = originalMoneyPerClick * multiplicador;
-        }else
+        }
+        else
         {
             moneyPerClick = originalMoneyPerClick;
             moneyPerClick += bonus;
@@ -134,8 +180,10 @@ public class AutoClicker : MonoBehaviour
 
     public void Click()
     {
-        var sound = AudioManager.instance.GetSound("Type");
         float numrand = Random.Range(1.5f, 3f);
+        int soundRand = Random.Range(0, Sounds.Count);
+        Debug.Log(soundRand);
+        Sound sound = Sounds[soundRand];
         sound.source.pitch = numrand;
         sound.source.Play();
         money += moneyPerClick * moneyMultiplier;

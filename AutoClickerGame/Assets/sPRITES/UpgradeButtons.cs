@@ -1,4 +1,5 @@
 using DG.Tweening;
+using DG.Tweening.Core.Easing;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -44,7 +45,7 @@ public class UpgradeButtons : MonoBehaviour
             }
             else
             {
-                titulo.text = "¿?";
+                titulo.text = "?";
             }
         }
     }
@@ -65,6 +66,27 @@ public class UpgradeButtons : MonoBehaviour
             autoClicker.money -= upgrade.cost;
             autoClicker.AddClickPerSecond(upgrade.clickPerSecondBonus);
             autoClicker.AddClickPerTouch(upgrade.clickPerTouchBonus);
+            autoClicker.GuardarDatos();
+        }
+    }
+    public void LoadUpgradeData()
+    {
+        for (int i = 0; i < objetos.Count; i++)
+        {
+            UpgradesSO UPGRADE = upgrades[i];
+            TextMeshProUGUI titulo = objetos[i].transform.Find("Titulo").GetComponent<TextMeshProUGUI>();
+            if (autoClicker.money >= UPGRADE.cost)
+            {
+                UPGRADE.Activado = true;
+            }
+            if (UPGRADE.Activado)
+            {
+                titulo.text = upgrades[i].nombre;
+            }
+            else
+            {
+                titulo.text = "?";
+            }
         }
     }
 }

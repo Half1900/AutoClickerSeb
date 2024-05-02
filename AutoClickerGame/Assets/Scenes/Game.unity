@@ -2391,7 +2391,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c7fca59e02af5aa44880d93f357fde06, type: 3}
-  m_Color: {r: 0.735849, g: 0.5935386, b: 0.64170516, a: 1}
+  m_Color: {r: 0.8207547, g: 0.6697668, b: 0.78300774, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4061,6 +4061,52 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0.8535156}
   m_SizeDelta: {x: -25.1056, y: -33.2067}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1057058530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1057058531}
+  - component: {fileID: 1057058532}
+  m_Layer: 0
+  m_Name: ManagerTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1057058531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057058530}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1057058532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057058530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 194ea9046e24bb2469d94d4281d81e41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ajolote: {fileID: 1384556579}
+  UI: {fileID: 1398715783}
 --- !u!1 &1092193477
 GameObject:
   m_ObjectHideFlags: 0
@@ -4246,6 +4292,24 @@ MonoBehaviour:
   canvasRect: {fileID: 786528318}
   Moveraqui: {fileID: 299683836}
   BackgroundAjolote: {fileID: 1384556582}
+  upgrades:
+  - {fileID: 11400000, guid: c292dff8d3f703849afc474b36fcc9fe, type: 2}
+  - {fileID: 11400000, guid: 444947a0e2ff7024894ab2cb5706b0c1, type: 2}
+  - {fileID: 11400000, guid: 32f64ace4e989e74b8876d5d8461ac55, type: 2}
+  - {fileID: 11400000, guid: d1d59e611c3405a498622353bbca1f7c, type: 2}
+  - {fileID: 11400000, guid: edd0245a92389864698f720eb8ca18a7, type: 2}
+  - {fileID: 11400000, guid: 4194be064ce64d640b84c48196159797, type: 2}
+  - {fileID: 11400000, guid: df9a361fb11ad274cb20909a4b81784a, type: 2}
+  - {fileID: 11400000, guid: 51f1f4916adec964a89399b82456591a, type: 2}
+  - {fileID: 11400000, guid: b240f4ef47dde6542885b153c4c2f0bd, type: 2}
+  - {fileID: 11400000, guid: 80d545754f81fdb49a496412cc5f67cd, type: 2}
+  - {fileID: 11400000, guid: 8ed9e1105aba0954fa85b5706bce5710, type: 2}
+  - {fileID: 11400000, guid: 55b8493131620034d846453735cf9ff1, type: 2}
+  - {fileID: 11400000, guid: 94a7d1772be380b4899b38173b0778ed, type: 2}
+  - {fileID: 11400000, guid: 489cd7af9b4b6624eaf5a79b36dfd7c3, type: 2}
+  - {fileID: 11400000, guid: 9b0ff8ce752eda242ad4e4e348885dcf, type: 2}
+  - {fileID: 11400000, guid: 77c8ee5e63f711447abb5f89cd8c1979, type: 2}
+  - {fileID: 11400000, guid: 8be2424a7e955934a80c55035a0d3585, type: 2}
   moneyPerClick: 1
   moneyMultiplier: 1
   autoClickRate: 1
@@ -4260,6 +4324,7 @@ MonoBehaviour:
   TEXTOX: {fileID: 656448641}
   stateMultiplier: 0
   BoostCinco: 0
+  Sounds: []
 --- !u!4 &1219678512
 Transform:
   m_ObjectHideFlags: 0
@@ -4297,8 +4362,16 @@ MonoBehaviour:
     type: 0
     source: {fileID: 0}
   - name: Type
-    clip: {fileID: 8300000, guid: 7a68e86e2578c2f4dae3f4d875d7c931, type: 3}
-    volume: 0.4
+    clip: {fileID: 8300000, guid: b5b600d4eabe56d40b7d689ea3e06977, type: 3}
+    volume: 0.3
+    pitch: 1
+    playOnAwake: 0
+    loop: 0
+    type: 1
+    source: {fileID: 0}
+  - name: TypeDos
+    clip: {fileID: 8300000, guid: 2110b68c7450fde43aef56c4d4dad58f, type: 3}
+    volume: 0.3
     pitch: 1
     playOnAwake: 0
     loop: 0
@@ -4379,6 +4452,7 @@ MonoBehaviour:
   numberOfRaindrops: 30
   fallDuration: 2
   canvasRect: {fileID: 904260969}
+  CanSpawn: 1
 --- !u!1001 &1238512877
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4539,7 +4613,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c7fca59e02af5aa44880d93f357fde06, type: 3}
-  m_Color: {r: 0.735849, g: 0.5935386, b: 0.64170516, a: 1}
+  m_Color: {r: 0.8207547, g: 0.6697668, b: 0.78300774, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -4827,7 +4901,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 379.67072, y: -111.22896}
+  m_AnchoredPosition: {x: 379.67072, y: -80.811905}
   m_SizeDelta: {x: 637.1947, y: 637.1898}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1384556582
@@ -4917,7 +4991,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85.56201, y: -47.901245}
+  m_AnchoredPosition: {x: 85.56201, y: -47.901367}
   m_SizeDelta: {x: 1225, y: 281.4866}
   m_Pivot: {x: 0, y: 1}
 --- !u!1001 &1406710822
@@ -5270,7 +5344,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1997608445}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.19417481
+  m_Size: 0.1955154
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5604,8 +5678,8 @@ MonoBehaviour:
   m_MovementType: 1
   m_Elasticity: 0.02
   m_Inertia: 1
-  m_DecelerationRate: 0.5
-  m_ScrollSensitivity: 3
+  m_DecelerationRate: 0.01
+  m_ScrollSensitivity: 1
   m_Viewport: {fileID: 1934418352}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 1457462274}
@@ -5991,7 +6065,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -3.2878418, y: -28}
-  m_SizeDelta: {x: 561.1672, y: 561.165}
+  m_SizeDelta: {x: 646.2396, y: 646.24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1671693884
 MonoBehaviour:
@@ -7642,3 +7716,4 @@ SceneRoots:
   - {fileID: 1118987166}
   - {fileID: 576922632}
   - {fileID: 1298455395}
+  - {fileID: 1057058531}

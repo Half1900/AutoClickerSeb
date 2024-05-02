@@ -10,6 +10,7 @@ public class RainEfect : MonoBehaviour
     public int numberOfRaindrops = 30;
     public float fallDuration = 2f;
     public RectTransform canvasRect;
+    public bool CanSpawn = true;
     private void Awake()
     {
         if (Instance != null)

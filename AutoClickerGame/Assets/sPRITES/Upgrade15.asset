@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e67d02ebee1374f977f36875ce4932, type: 3}
   m_Name: Upgrade15
   m_EditorClassIdentifier: 
-  nombre: +2M Ajolote per click
+  nombre: +2M Axolotl per click
   cost: 2e+12
   clickPerSecondBonus: 0
   clickPerTouchBonus: 2e+12
