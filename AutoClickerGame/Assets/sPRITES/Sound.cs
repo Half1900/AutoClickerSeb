@@ -1,12 +1,5 @@
 using UnityEngine;
-
-public enum SoundType
-{
-    Music,
-    SoundEffect,
-    Dialogue
-}
-
+using UnityEngine.Audio;
 [System.Serializable]
 public class Sound
 {
@@ -18,7 +11,7 @@ public class Sound
     public float pitch = 1f;
     public bool playOnAwake;
     public bool loop;
-    public SoundType type;
     [HideInInspector]
     public AudioSource source;
+    public AudioMixerGroup group;
 }

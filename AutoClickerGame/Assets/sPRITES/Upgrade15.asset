@@ -15,5 +15,5 @@ MonoBehaviour:
   nombre: +2M Axolotl per click
   cost: 2e+12
   clickPerSecondBonus: 0
-  clickPerTouchBonus: 2e+12
+  clickPerTouchBonus: 2000000
   Activado: 0

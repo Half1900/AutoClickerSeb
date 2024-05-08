@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     public List<Sound> sounds;
-
     void Awake()
     {
         if (instance == null)
@@ -26,6 +26,7 @@ public class AudioManager : MonoBehaviour
             sound.source.loop = sound.loop;
             sound.source.playOnAwake = sound.playOnAwake;
             sound.source.pitch = sound.pitch;
+            sound.source.outputAudioMixerGroup = sound.group;
         }
     }
     public void AddSound(Sound sound)

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Upgrade9
   m_EditorClassIdentifier: 
   nombre: +9k Axolotl per click
-  cost: 22000000
+  cost: 2200000
   clickPerSecondBonus: 0
   clickPerTouchBonus: 9000
   Activado: 0

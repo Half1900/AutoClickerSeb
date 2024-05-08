@@ -97,10 +97,6 @@ public class AutoClicker : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            SaveManager.DeletePlayerData();
-        }
         moneyText.text = string.Format($"Axolotl: { NumberAbbreviator.AbbreviateNumber(money)}");
         
         if (boostActive == false)
@@ -180,10 +176,9 @@ public class AutoClicker : MonoBehaviour
 
     public void Click()
     {
-        float numrand = Random.Range(1.5f, 3f);
+        float numrand = Random.Range(2f, 3f);
         int soundRand = Random.Range(0, Sounds.Count);
-        Debug.Log(soundRand);
-        Sound sound = Sounds[soundRand];
+        Sound sound = Sounds[0];
         sound.source.pitch = numrand;
         sound.source.Play();
         money += moneyPerClick * moneyMultiplier;
@@ -240,5 +235,9 @@ public class AutoClicker : MonoBehaviour
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(BackgroundAjolote.DOFade(1f, 0f)).Append(Ajolote.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Ajolote.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0f); }));
         }
+    }
+    public void EliminarDatos()
+    {
+        SaveManager.DeletePlayerData();
     }
 }

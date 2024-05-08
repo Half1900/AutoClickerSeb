@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nombre: +1M Axolotl per second
   cost: 3e+9
-  clickPerSecondBonus: 3e+9
+  clickPerSecondBonus: 1000000
   clickPerTouchBonus: 0
   Activado: 0
