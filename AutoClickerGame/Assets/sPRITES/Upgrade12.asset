@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e67d02ebee1374f977f36875ce4932, type: 3}
   m_Name: Upgrade12
   m_EditorClassIdentifier: 
-  nombre: +200k Axolotl per second
-  cost: 900000000
-  clickPerSecondBonus: 200000
+  nombre: +20k Stars per second
+  cost: 12000000
+  clickPerSecondBonus: 20000
   clickPerTouchBonus: 0
   Activado: 0

@@ -10,6 +10,7 @@ public class RewardAdd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
     [SerializeField] Button _showAdButton;
     [SerializeField] string _androidAdUnitId = "Rewarded_Android";
     string adUnitId = null;
+    int adCount = 0;
     void Awake()
     {
 #if UNITY_ANDROID
@@ -52,7 +53,37 @@ public class RewardAdd : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowList
     {
         if (placementId == adUnitId && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
-            AutoClicker.instance.ChangeState(StateMultiplier.Cinco);
+            adCount++;
+            if (adCount <= 5)
+            {
+                // Dar recompensa según el número de veces que se ha reproducido el anuncio
+                switch (adCount)
+                {
+                    case 1:
+                        AutoClicker.instance.ChangeState(StateMultiplier.Cinco);
+                        _showAdButton.interactable = false;
+                        // Dar recompensa 1
+                        break;
+                    case 2:
+                        print("Recompensa 2");
+                        // Dar recompensa 2
+                        break;
+                    case 3:
+                        print("Recompensa 3");
+                        // Dar recompensa 3
+                        break;
+                    case 4:
+                        print("Recompensa 4");
+                        // Dar recompensa 4
+                        break;
+                    case 5:
+                        print("Recompensa 5");
+                        // Dar recompensa 5
+                        // Desactivar el botón después de la quinta reproducción
+                        _showAdButton.interactable = false;
+                        break;
+                }
+            }
         }
     }
     #endregion

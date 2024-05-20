@@ -49,6 +49,14 @@ public class UpgradeButtons : MonoBehaviour
             }
         }
     }
+    public void ActualizarUI()
+    {
+        for (int i = 0; i < objetos.Count; i++)
+        {
+            TextMeshProUGUI cost = objetos[i].transform.Find("Costo").GetComponent<TextMeshProUGUI>();
+            cost.text = NumberAbbreviator.AbbreviateNumber(upgrades[i].cost);
+        }
+    }
 
     public void PurchaseUpgrade(int index)
     {
@@ -66,6 +74,8 @@ public class UpgradeButtons : MonoBehaviour
             autoClicker.money -= upgrade.cost;
             autoClicker.AddClickPerSecond(upgrade.clickPerSecondBonus);
             autoClicker.AddClickPerTouch(upgrade.clickPerTouchBonus);
+            //upgrade.AumentarNivel();
+            ActualizarUI();
             autoClicker.GuardarDatos();
         }
     }

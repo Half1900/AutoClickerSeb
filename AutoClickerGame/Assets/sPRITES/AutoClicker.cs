@@ -14,6 +14,8 @@ public enum StateMultiplier
 public class AutoClicker : MonoBehaviour
 {
     public TextMeshProUGUI moneyText;
+    public TextMeshProUGUI PerClick;
+    public TextMeshProUGUI PerSecond;
     public TextMeshProUGUI countdownAndBoostText;
     public Transform Ajolote;
     public GameObject clickValueTextPrefab;
@@ -38,7 +40,7 @@ public class AutoClicker : MonoBehaviour
     public GameObject spritePrefab;
     public float upwardForce = 1f;
     public float sideForce = 1f;
-    public float fadeDuration = 1f;
+    public float fadeDuration = 3f;
     public TextMeshProUGUI TEXTOX;
     public static AutoClicker instance;
     public StateMultiplier stateMultiplier;
@@ -93,11 +95,15 @@ public class AutoClicker : MonoBehaviour
         originalMoneyPerClick = moneyPerClick;
         originalMoneyPerSecond = autoClickRate;
         Application.targetFrameRate = 90;
+
+        InvokeRepeating("GuardarDatos", 1.0f, 1.0f);
     }
 
     void Update()
     {
-        moneyText.text = string.Format($"Axolotl: { NumberAbbreviator.AbbreviateNumber(money)}");
+        moneyText.text = string.Format($"Stars: { NumberAbbreviator.AbbreviateNumber(money)}");
+        PerClick.text = string.Format($"Click: {NumberAbbreviator.AbbreviateNumber(originalMoneyPerClick)}");
+        PerSecond.text = string.Format($"Second: {NumberAbbreviator.AbbreviateNumber(originalMoneyPerSecond)}");
         
         if (boostActive == false)
         {
@@ -228,12 +234,12 @@ public class AutoClicker : MonoBehaviour
                 .Append(rectTransform.DOLocalMove(rectTransform.localPosition - Vector3.up * 50f, 1f).SetEase(Ease.InQuad)) 
                 .OnComplete(() => { Destroy(spriteObject); }); 
     }
-    public void HackerAnim()
+    public void AjolotePunch()
     {
         if (Ajolote.localScale == Vector3.one)
         {
             Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(BackgroundAjolote.DOFade(1f, 0f)).Append(Ajolote.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Ajolote.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0f); }));
+            mySequence.Append(Ajolote.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Ajolote.localScale = Vector3.one;}));
         }
     }
     public void EliminarDatos()
