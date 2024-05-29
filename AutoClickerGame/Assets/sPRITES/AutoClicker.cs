@@ -85,8 +85,8 @@ public class AutoClicker : MonoBehaviour
         {
             CargarDatos();
         }
-        Sound soundUno = AudioManager.instance.GetSound("Type");
-        Sound soundDos = AudioManager.instance.GetSound("TypeDos");
+        Sound soundUno = AudioManager.instance.GetSound("FootSteep1");
+        Sound soundDos = AudioManager.instance.GetSound("FootSteep2");
         Sounds.Add(soundUno);
         Sounds.Add(soundDos);
 
@@ -184,7 +184,7 @@ public class AutoClicker : MonoBehaviour
     {
         float numrand = Random.Range(2f, 3f);
         int soundRand = Random.Range(0, Sounds.Count);
-        Sound sound = Sounds[0];
+        Sound sound = Sounds[soundRand];
         sound.source.pitch = numrand;
         sound.source.Play();
         money += moneyPerClick * moneyMultiplier;
