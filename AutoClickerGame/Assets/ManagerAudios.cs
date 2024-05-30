@@ -19,16 +19,17 @@ public class ManagerAudios : MonoBehaviour
     private void Start()
     {
         SetMusicVolume();
+        SetSFXVolume();
     }
     public void SetMusicVolume()
     {
         float volume = musicSlider.value;
-        audioMixer.SetFloat("Music", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("Music", Mathf.Log10(volume) * 1);
     }
     public void SetSFXVolume()
     {
         float volume = SfxSlider.value;
-        audioMixer.SetFloat("Sound", Mathf.Log10(volume) * 20);
+        audioMixer.SetFloat("Sound", Mathf.Log10(volume) * 1);
     }
 
     public void MusicMuted()
@@ -41,7 +42,8 @@ public class ManagerAudios : MonoBehaviour
         }
         else
         {
-            audioMixer.SetFloat("Music", 0f);
+            float volume = SfxSlider.value;
+            audioMixer.SetFloat("Music", Mathf.Log10(volume) * 1);
             MusicImage.sprite = UnMutedMusic;
             Music = true;
         }
@@ -56,7 +58,8 @@ public class ManagerAudios : MonoBehaviour
         }
         else
         {
-            audioMixer.SetFloat("Sound", 0f);
+            float volume = SfxSlider.value;
+            audioMixer.SetFloat("Sound", Mathf.Log10(volume) * 1);
             SoundImage.sprite = UnMutedSfx;
             SFX = true;
         }

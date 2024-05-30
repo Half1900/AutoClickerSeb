@@ -236,10 +236,10 @@ public class AutoClicker : MonoBehaviour
     }
     public void AjolotePunch()
     {
-        if (Ajolote.localScale == Vector3.one)
+        if (Ajolote.localScale == Vector3.one )
         {
             Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(Ajolote.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Ajolote.localScale = Vector3.one;}));
+            mySequence.Append(BackgroundAjolote.DOFade(1f,0.1f)).Append(Ajolote.DOPunchScale(new Vector3(0.1f, 0.1f, 0.1f), 0.1f).OnComplete(() => { Ajolote.localScale = Vector3.one; BackgroundAjolote.DOFade(0f, 0.1f); }));
         }
     }
     public void EliminarDatos()
